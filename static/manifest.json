@@ -1,0 +1,23 @@
+{
+    "name": "Fetal Health Checkup",
+    "short_name": "Fetal AI",
+    "description": "Fetal Health Analysis Application",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#00BFFF",
+    "icons": [
+        {
+            "src": "/static/img/pregnant.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "/static/img/pregnant.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }
+    ]
+} 

@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fetal Checkup</title>
+    
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#00BFFF">
+    <meta name="description" content="Fetal Health Analysis Application">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="Fetal AI">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/static/manifest.json">
+    
+    <!-- PWA Icons -->
+    <link rel="apple-touch-icon" href="/static/img/icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/static/img/icon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/static/img/icon-16x16.png">
+    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 150vh;
+            margin: 0;
+            background: url('https://example.com/background-image.jpg') no-repeat center center fixed;
+            background-size: cover;
+        }
+        .container {
+            background: rgba(178, 233, 202, 0.8);
+            border: 2px solid #000000;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 1200px;
+            box-sizing: border-box;
+        }
+        h1 {
+            text-align: center;
+            color: #fa3f3f;
+        }
+        .conditions {
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #00BFFF;
+            border-radius: 5px;
+            background-color: #f0f8ff;
+        }
+        .conditions h2 {
+            text-align: center;
+            margin: 0;
+            color: #333;
+        }
+        .inputs {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+        .input-group label {
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+        .input-group input {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        .input-group input:invalid {
+            border-color: #ff6b6b;
+            background-color: #fff0f0;
+        }
+        .input-group input:invalid:focus {
+            outline: none;
+            box-shadow: 0 0 3px #ff6b6b;
+        }
+        .submit-btn {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .submit-btn button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #00BFFF;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .submit-btn button:hover {
+            background-color: #009acd;
+        }
+
+        /* Error message styling */
+        .input-group input:invalid + .error-message {
+            display: block;
+            color: #ff6b6b;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+        .error-message {
+            display: none;
+        }
+
+        /* PWA Notification Styles */
+        .connectivity-status,
+        .update-notification {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #333;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            z-index: 1000;
+            text-align: center;
+            animation: slideUp 0.3s ease-out;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .update-notification {
+            background-color: #00BFFF;
+            padding: 20px;
+        }
+
+        .update-notification button {
+            background-color: white;
+            color: #00BFFF;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            margin-top: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        .update-notification button:hover {
+            background-color: #f0f0f0;
+        }
+
+        .connectivity-status.fade-out {
+            opacity: 0;
+            transition: opacity 1s;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translate(-50%, 100%);
+                opacity: 0;
+            }
+            to {
+                transform: translate(-50%, 0);
+                opacity: 1;
+            }
+        }
+
+        /* Add PWA install prompt */
+        .pwa-install-prompt {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: none;
+            z-index: 1000;
+            max-width: 300px;
+        }
+
+        .pwa-install-prompt.show {
+            display: block;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .pwa-install-prompt button {
+            background-color: #00BFFF;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            margin-top: 10px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: bold;
+        }
+
+        .pwa-install-prompt button:hover {
+            background-color: #009acd;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Fetal Health CheckUp</h1>
+        <div class="conditions">
+            <h2>FETAL HEALTH</h2>
+        </div>
+        <form action="{{ url_for('output') }}" method="POST">
+            <div class="inputs">
+                <div class="input-group">
+                    <label for="baseline_value">Baseline Value:</label>
+                    <input type="number" id="baseline_value" name="baseline_value" 
+                           required min="0" max="200" step="any"
+                           placeholder="Enter less than 200">
+                    <span class="error-message">Please enter a value between 0 and 200</span>
+                </div>
+                <div class="input-group">
+                    <label for="accelerations">Accelerations:</label>
+                    <input type="number" id="accelerations" name="accelerations" 
+                           required min="0" max="100" step="any"
+                           placeholder="Enter less than 100">
+                    <span class="error-message">Please enter a value between 0 and 100</span>
+                </div>
+                <div class="input-group">
+                    <label for="fetal_movement">Fetal Movement:</label>
+                    <input type="number" id="fetal_movement" name="fetal_movement" 
+                           required min="0" max="100" step="any"
+                           placeholder="Enter less than 100">
+                    <span class="error-message">Please enter a value between 0 and 100</span>
+                </div>
+                <div class="input-group">
+                    <label for="uterine_contractions">Uterine Contractions:</label>
+                    <input type="number" id="uterine_contractions" name="uterine_contractions" 
+                           required min="0" max="100" step="any"
+                           placeholder="Enter less than 100">
+                    <span class="error-message">Please enter a value between 0 and 100</span>
+                </div>
+                <div class="input-group">
+                    <label for="light_decelerations">Light Decelerations:</label>
+                    <input type="number" id="light_decelerations" name="light_decelerations" 
+                           required min="0" max="100" step="any"
+                           placeholder="Enter less than 100">
+                    <span class="error-message">Please enter a value between 0 and 100</span>
+                </div>
+                <div class="input-group">
+                    <label for="severe_decelerations">Severe Decelerations:</label>
+                    <input type="number" id="severe_decelerations" name="severe_decelerations" 
+                           required min="0" max="100" step="any"
+                           placeholder="Enter less than 100">
+                    <span class="error-message">Please enter a value between 0 and 100</span>
+                </div>
+                <div class="input-group">
+                    <label for="prolongued_decelerations">Prolongued Decelerations:</label>
+                    <input type="number" id="prolongued_decelerations" name="prolongued_decelerations" 
+                           required min="0" max="100" step="any"
+                           placeholder="Enter less than 100">
+                    <span class="error-message">Please enter a value between 0 and 100</span>
+                </div>
+                <div class="input-group">
+                    <label for="abnormal_short_term_variability">Abnormal Short Term Variability:</label>
+                    <input type="number" id="abnormal_short_term_variability" name="abnormal_short_term_variability" 
+                           required min="0" max="100" step="any"
+                           placeholder="Enter less than 100">
+                    <span class="error-message">Please enter a value between 0 and 100</span>
+                </div>
+                <div class="input-group">
+                    <label for="mean_value_of_short_term_variability">Mean Value of Short Term Variability:</label>
+                    <input type="number" id="mean_value_of_short_term_variability" name="mean_value_of_short_term_variability" 
+                           required min="0" max="100" step="any"
+                           placeholder="Enter less than 100">
+                    <span class="error-message">Please enter a value between 0 and 100</span>
+                </div>
+                <div class="input-group">
+                    <label for="percentage_of_time_with_abnormal_long_term_variability">Percentage of Time with Abnormal Long Term Variability:</label>
+                    <input type="number" id="percentage_of_time_with_abnormal_long_term_variability" 
+                           name="percentage_of_time_with_abnormal_long_term_variability" 
+                           required min="0" max="100" step="any"
+                           placeholder="Enter less than 100">
+                    <span class="error-message">Please enter a value between 0 and 100</span>
+                </div>
+                <div class="input-group">
+                    <label for="mean_value_of_long_term_variability">Mean Value of Long Term Variability:</label>
+                    <input type="number" id="mean_value_of_long_term_variability" name="mean_value_of_long_term_variability" 
+                           required min="0" max="100" step="any"
+                           placeholder="Enter less than 100">
+                    <span class="error-message">Please enter a value between 0 and 100</span>
+                </div>
+                <div class="input-group">
+                    <label for="histogram_width">Histogram Width:</label>
+                    <input type="number" id="histogram_width" name="histogram_width" 
+                           required min="0" max="60" step="any"
+                           placeholder="Enter less than 60">
+                    <span class="error-message">Please enter a value between 0 and 60</span>
+                </div>
+                <div class="input-group">
+                    <label for="histogram_min">Histogram Min:</label>
+                    <input type="number" id="histogram_min" name="histogram_min" 
+                           required min="0" max="100" step="any"
+                           placeholder="Enter less than 100">
+                    <span class="error-message">Please enter a value between 0 and 100</span>
+                </div>
+                <div class="input-group">
+                    <label for="histogram_max">Histogram Max:</label>
+                    <input type="number" id="histogram_max" name="histogram_max" 
+                           required min="0" max="200" step="any"
+                           placeholder="Enter less than 200">
+                    <span class="error-message">Please enter a value between 0 and 200</span>
+                </div>
+                <div class="input-group">
+                    <label for="histogram_number_of_peaks">Histogram Number of Peaks:</label>
+                    <input type="number" id="histogram_number_of_peaks" name="histogram_number_of_peaks" 
+                           required min="0" max="100" step="any"
+                           placeholder="Enter less than 100">
+                    <span class="error-message">Please enter a value between 0 and 100</span>
+                </div>
+                <div class="input-group">
+                    <label for="histogram_number_of_zeroes">Histogram Number of Zeroes:</label>
+                    <input type="number" id="histogram_number_of_zeroes" name="histogram_number_of_zeroes" 
+                           required min="0" max="200" step="any"
+                           placeholder="Enter less than 200">
+                    <span class="error-message">Please enter a value between 0 and 200</span>
+                </div>
+                <div class="input-group">
+                    <label for="histogram_mode">Histogram Mode:</label>
+                    <input type="number" id="histogram_mode" name="histogram_mode" 
+                           required min="0" max="200" step="any"
+                           placeholder="Enter less than 200">
+                    <span class="error-message">Please enter a value between 0 and 200</span>
+                </div>
+                <div class="input-group">
+                    <label for="histogram_mean">Histogram Mean:</label>
+                    <input type="number" id="histogram_mean" name="histogram_mean" 
+                           required min="0" max="200" step="any"
+                           placeholder="Enter less than 200">
+                    <span class="error-message">Please enter a value between 0 and 200</span>
+                </div>
+                <div class="input-group">
+                    <label for="histogram_median">Histogram Median:</label>
+                    <input type="number" id="histogram_median" name="histogram_median" 
+                           required min="0" max="100" step="any"
+                           placeholder="Enter less than 100">
+                    <span class="error-message">Please enter a value between 0 and 100</span>
+                </div>
+                <div class="input-group">
+                    <label for="histogram_variance">Histogram Variance:</label>
+                    <input type="number" id="histogram_variance" name="histogram_variance" 
+                           required min="0" max="100" step="any"
+                           placeholder="Enter less than 100">
+                    <span class="error-message">Please enter a value between 0 and 100</span>
+                </div>
+                <div class="input-group">
+                    <label for="histogram_tendency">Histogram Tendency:</label>
+                    <input type="number" id="histogram_tendency" name="histogram_tendency" 
+                           required min="0" max="100" step="any"
+                           placeholder="Enter less than 100">
+                    <span class="error-message">Please enter a value between 0 and 100</span>
+                </div>
+            </div>
+            <div class="submit-btn">
+                <button type="submit">Submit</button>
+            </div>
+        </form>
+    </div>
+    
+    <!-- PWA Install Prompt -->
+    <div class="pwa-install-prompt" id="installPrompt">
+        <h3>📱 Install App</h3>
+        <p>Install this app on your device for quick and easy access!</p>
+        <button id="installButton">Install Now</button>
+    </div>
+
+    <!-- PWA Service Worker Registration -->
+    <script src="/static/js/pwa.js"></script>
+</body>
+</html>
