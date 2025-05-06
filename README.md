@@ -17,23 +17,6 @@ A Progressive Web Application (PWA) for Fetal Health Analysis using Machine Lear
 - Machine Learning (Scikit-learn)
 - PWA features (Service Workers, Cache API, IndexedDB)
 
-## Installation
-
-1. Clone the repository:
-```bash
-git clone https://github.com/YOUR_USERNAME/Fetal_AI.git
-cd Fetal_AI
-```
-
-2. Install dependencies:
-```bash
-pip install -r requirements.txt
-```
-
-3. Run the application:
-```bash
-python run_https.py
-```
 
 ## Usage
 
@@ -48,4 +31,4 @@ MIT License
 
 ## Author
 
-[Your Name] 
+Jashwanth Boddupally
