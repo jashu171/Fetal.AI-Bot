@@ -3,6 +3,10 @@ import numpy
 import pandas
 import pickle
 import os
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 app = Flask(__name__)
 
@@ -98,4 +102,7 @@ def output():
         return str(e)
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5000)
+    # Use environment variables with defaults
+    port = int(os.getenv('PORT', 5000))
+    debug = os.getenv('FLASK_DEBUG', 'False') == 'True'
+    app.run()

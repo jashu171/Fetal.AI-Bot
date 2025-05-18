@@ -27,6 +27,16 @@
   <!-- Main CSS File -->
   <link href="../static/css/main.css" rel="stylesheet">
 
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+
+  <!-- Service Worker Registration -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js');
+    }
+  </script>
+
 <body class="index-page">
 
   <header id="header" class="header d-flex align-items-center fixed-top">
